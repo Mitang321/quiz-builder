@@ -23,6 +23,22 @@
         <button type="button" id="addQuestionBtn">Add Another Question</button>
         <button type="submit">Create Quiz</button>
       </form>
+
+      <!-- Quiz Display Section -->
+      <div id="quiz-section" style="display: none">
+        <h2>Take the Quiz</h2>
+        <div id="quiz-question"></div>
+        <input type="text" id="quiz-answer" placeholder="Your Answer" />
+        <button type="button" id="nextQuestionBtn">Next Question</button>
+      </div>
+
+      <!-- Summary Display Section -->
+      <div id="summary-section" style="display: none">
+        <h2>Quiz Summary</h2>
+        <div id="summary-container"></div>
+        <h3 id="quiz-score"></h3>
+        <button type="button" id="retakeQuizBtn">Retake Quiz</button>
+      </div>
     </div>
     <script src="script.js"></script>
   </body>

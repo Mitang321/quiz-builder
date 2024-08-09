@@ -61,3 +61,63 @@ button[type="button"]:hover {
 .answer-block {
   margin-bottom: 15px;
 }
+
+#quiz-section {
+  margin-top: 20px;
+}
+
+#quiz-question {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+#quiz-answer {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#nextQuestionBtn {
+  background-color: #17a2b8;
+}
+
+#nextQuestionBtn:hover {
+  background-color: #138496;
+}
+
+#summary-section {
+  margin-top: 20px;
+}
+
+#summary-container {
+  margin-bottom: 20px;
+}
+
+#retakeQuizBtn {
+  background-color: #ffc107;
+}
+
+#retakeQuizBtn:hover {
+  background-color: #e0a800;
+}
+
+.summary-item {
+  margin-bottom: 15px;
+}
+
+.summary-item span {
+  font-weight: bold;
+}
+/* Previous CSS remains the same */
+
+#quiz-score {
+  margin-top: 20px;
+  font-size: 1.5em;
+  color: #28a745;
+}
+
+#quiz-score.wrong {
+  color: #dc3545;
+}
