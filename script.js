@@ -1,6 +1,9 @@
 let questionCount = 1;
 let currentQuestionIndex = 0;
 let quizData = [];
+let timerInterval;
+const totalQuizTime = 60; // Total time for the quiz in seconds
+let timeLeft = totalQuizTime;
 
 document
   .getElementById("addQuestionBtn")
@@ -9,7 +12,6 @@ document
 
     const questionContainer = document.getElementById("questions-container");
 
-    // Create a new question block
     const questionBlock = document.createElement("div");
     questionBlock.className = "question-block";
 
@@ -26,7 +28,6 @@ document
     questionBlock.appendChild(questionLabel);
     questionBlock.appendChild(questionInput);
 
-    // Create a new answer block
     const answerBlock = document.createElement("div");
     answerBlock.className = "answer-block";
 
@@ -43,7 +44,6 @@ document
     answerBlock.appendChild(answerLabel);
     answerBlock.appendChild(answerInput);
 
-    // Append the new blocks to the container
     questionContainer.appendChild(questionBlock);
     questionContainer.appendChild(answerBlock);
   });
@@ -60,10 +60,10 @@ document
       quizData.push({ question, answer, userAnswer: "" });
     }
 
-    // Hide the form and show the quiz section
     document.getElementById("quizForm").style.display = "none";
     document.getElementById("quiz-section").style.display = "block";
 
+    startTimer();
     displayNextQuestion();
   });
 
@@ -79,14 +79,17 @@ document
     if (currentQuestionIndex < quizData.length) {
       displayNextQuestion();
     } else {
+      clearInterval(timerInterval);
       showSummary();
     }
   });
 
 document.getElementById("retakeQuizBtn").addEventListener("click", function () {
   currentQuestionIndex = 0;
+  timeLeft = totalQuizTime;
   document.getElementById("summary-section").style.display = "none";
   document.getElementById("quiz-section").style.display = "block";
+  startTimer();
   displayNextQuestion();
 });
 
@@ -95,10 +98,23 @@ function displayNextQuestion() {
     quizData[currentQuestionIndex].question;
 }
 
+function startTimer() {
+  document.getElementById("timeLeft").textContent = timeLeft;
+  timerInterval = setInterval(function () {
+    timeLeft--;
+    document.getElementById("timeLeft").textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      showSummary();
+    }
+  }, 1000);
+}
+
 function showSummary() {
   document.getElementById("quiz-section").style.display = "none";
   const summaryContainer = document.getElementById("summary-container");
-  summaryContainer.innerHTML = ""; // Clear any existing content
+  summaryContainer.innerHTML = "";
 
   let correctAnswers = 0;
 

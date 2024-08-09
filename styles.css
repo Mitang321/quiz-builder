@@ -110,7 +110,6 @@ button[type="button"]:hover {
 .summary-item span {
   font-weight: bold;
 }
-/* Previous CSS remains the same */
 
 #quiz-score {
   margin-top: 20px;
@@ -119,5 +118,11 @@ button[type="button"]:hover {
 }
 
 #quiz-score.wrong {
+  color: #dc3545;
+}
+
+#timer {
+  margin-top: 15px;
+  font-size: 1.2em;
   color: #dc3545;
 }
