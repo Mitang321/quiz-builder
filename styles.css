@@ -133,3 +133,35 @@ button[type="button"]:hover {
 .options-container input {
   margin-top: 5px;
 }
+
+#auth-section {
+  margin-bottom: 20px;
+}
+
+#authForm input {
+  display: block;
+  margin: 10px 0;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+#authSubmitBtn {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#authToggle {
+  margin-top: 10px;
+  text-align: center;
+}
+
+#authToggle a {
+  color: #4caf50;
+  cursor: pointer;
+  text-decoration: underline;
+}

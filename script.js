@@ -4,6 +4,65 @@ let quizData = [];
 let timerInterval;
 const totalQuizTime = 60; // Total time for the quiz in seconds
 let timeLeft = totalQuizTime;
+let users = JSON.parse(localStorage.getItem("users")) || {}; // Store users in localStorage
+let currentUser = null;
+
+document
+  .getElementById("authForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (currentUser) {
+      alert("You are already logged in!");
+      return;
+    }
+
+    if (document.getElementById("authSubmitBtn").textContent === "Login") {
+      if (users[username] && users[username].password === password) {
+        currentUser = username;
+        document.getElementById("auth-section").style.display = "none";
+        document.getElementById("quizForm-section").style.display = "block";
+        document.getElementById("authMessage").textContent = "";
+      } else {
+        document.getElementById("authMessage").textContent =
+          "Invalid username or password!";
+      }
+    } else {
+      if (users[username]) {
+        document.getElementById("authMessage").textContent =
+          "Username already exists!";
+      } else {
+        users[username] = { password: password, quizzes: [] };
+        localStorage.setItem("users", JSON.stringify(users));
+        currentUser = username;
+        document.getElementById("auth-section").style.display = "none";
+        document.getElementById("quizForm-section").style.display = "block";
+        document.getElementById("authMessage").textContent = "";
+      }
+    }
+  });
+
+document
+  .getElementById("toggleAuthMode")
+  .addEventListener("click", function () {
+    const authTitle = document.getElementById("auth-title");
+    const authSubmitBtn = document.getElementById("authSubmitBtn");
+    const authToggle = document.getElementById("authToggle");
+
+    if (authSubmitBtn.textContent === "Login") {
+      authTitle.textContent = "Register";
+      authSubmitBtn.textContent = "Register";
+      authToggle.innerHTML =
+        'Already have an account? <a href="#">Login here</a>';
+    } else {
+      authTitle.textContent = "Login";
+      authSubmitBtn.textContent = "Login";
+      authToggle.innerHTML =
+        'Don\'t have an account? <a href="#">Register here</a>';
+    }
+  });
 
 document
   .getElementById("addQuestionBtn")
@@ -89,9 +148,9 @@ document
     // Append the new answer block to the container
     questionContainer.appendChild(answerBlock);
 
-    // Event listener for question type change
+    // Attach event listener for the newly added question type select
     typeSelect.addEventListener("change", function () {
-      updateOptionsContainer(typeSelect.id);
+      updateOptionsContainer(this.id);
     });
   });
 
@@ -99,91 +158,60 @@ document
   .getElementById("quizForm")
   .addEventListener("submit", function (event) {
     event.preventDefault();
+
+    const formData = new FormData(event.target);
     quizData = [];
 
     for (let i = 1; i <= questionCount; i++) {
-      const question = document.getElementById(`question${i}`).value;
-      const answer = document.getElementById(`answer${i}`).value;
-      const type = document.getElementById(`type${i}`).value;
+      const question = formData.get(`question${i}`);
+      const type = formData.get(`type${i}`);
       let options = [];
+      let answer = formData.get(`answer${i}`);
 
       if (type === "multiple") {
-        options = Array.from(
-          document.querySelectorAll(`#options${i} input`)
-        ).map((option) => option.value);
+        for (let j = 1; j <= 4; j++) {
+          const option = formData.get(`option${i}-${j}`);
+          if (option) options.push(option);
+        }
+      } else if (type === "truefalse") {
+        options = ["True", "False"];
       }
 
-      quizData.push({ question, answer, type, options, userAnswer: "" });
+      quizData.push({ question, type, options, answer });
     }
 
-    // Hide the form and show the quiz section
-    document.getElementById("quizForm").style.display = "none";
+    // Save the quiz to the user's profile
+    users[currentUser].quizzes.push(quizData);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    document.getElementById("quizForm-section").style.display = "none";
     document.getElementById("quiz-section").style.display = "block";
-
-    startTimer();
     displayNextQuestion();
+    startTimer();
   });
-
-document
-  .getElementById("nextQuestionBtn")
-  .addEventListener("click", function () {
-    let userAnswer;
-    const currentType = quizData[currentQuestionIndex].type;
-
-    if (currentType === "text") {
-      userAnswer = document.getElementById("quiz-answer").value;
-    } else if (currentType === "multiple" || currentType === "truefalse") {
-      userAnswer = document.querySelector(
-        'input[name="quiz-option"]:checked'
-      ).value;
-    }
-
-    quizData[currentQuestionIndex].userAnswer = userAnswer; // Store user's answer
-    document.getElementById("quiz-answer").value = ""; // Clear the input field
-
-    currentQuestionIndex++;
-
-    if (currentQuestionIndex < quizData.length) {
-      displayNextQuestion();
-    } else {
-      clearInterval(timerInterval); // Stop the timer
-      showSummary();
-    }
-  });
-
-document.getElementById("retakeQuizBtn").addEventListener("click", function () {
-  currentQuestionIndex = 0;
-  timeLeft = totalQuizTime; // Reset timer
-  document.getElementById("summary-section").style.display = "none";
-  document.getElementById("quiz-section").style.display = "block";
-  startTimer();
-  displayNextQuestion();
-});
 
 function displayNextQuestion() {
-  const currentQuestion = quizData[currentQuestionIndex];
   const quizQuestionElement = document.getElementById("quiz-question");
   const quizOptionsElement = document.getElementById("quiz-options");
   const quizAnswerElement = document.getElementById("quiz-answer");
 
+  if (currentQuestionIndex >= quizData.length) {
+    showSummary();
+    return;
+  }
+
+  const currentQuestion = quizData[currentQuestionIndex];
   quizQuestionElement.textContent = currentQuestion.question;
+
   quizOptionsElement.innerHTML = "";
+  quizAnswerElement.value = "";
 
-  if (currentQuestion.type === "text") {
-    quizAnswerElement.style.display = "block";
-    quizOptionsElement.style.display = "none";
-  } else if (
-    currentQuestion.type === "multiple" ||
-    currentQuestion.type === "truefalse"
-  ) {
-    quizAnswerElement.style.display = "none";
-    quizOptionsElement.style.display = "block";
-
+  if (currentQuestion.type === "multiple") {
     currentQuestion.options.forEach((option) => {
       const optionWrapper = document.createElement("div");
       const optionInput = document.createElement("input");
       optionInput.type = "radio";
-      optionInput.name = "quiz-option";
+      optionInput.name = "option";
       optionInput.value = option;
       optionWrapper.appendChild(optionInput);
 
@@ -193,6 +221,28 @@ function displayNextQuestion() {
 
       quizOptionsElement.appendChild(optionWrapper);
     });
+  } else if (currentQuestion.type === "truefalse") {
+    currentQuestion.options.forEach((option) => {
+      const optionWrapper = document.createElement("div");
+      const optionInput = document.createElement("input");
+      optionInput.type = "radio";
+      optionInput.name = "option";
+      optionInput.value = option;
+      optionWrapper.appendChild(optionInput);
+
+      const optionLabel = document.createElement("label");
+      optionLabel.textContent = option;
+      optionWrapper.appendChild(optionLabel);
+
+      quizOptionsElement.appendChild(optionWrapper);
+    });
+  } else {
+    const optionWrapper = document.createElement("div");
+    const optionInput = document.createElement("input");
+    optionInput.type = "text";
+    optionInput.name = "option";
+    quizOptionsElement.appendChild(optionWrapper);
+    optionWrapper.appendChild(optionInput);
   }
 }
 
@@ -221,12 +271,17 @@ function showSummary() {
     summaryItem.className = "summary-item";
     summaryItem.innerHTML = `
             <p><span>Question ${index + 1}:</span> ${item.question}</p>
-            <p><span>Your Answer:</span> ${item.userAnswer}</p>
+            <p><span>Your Answer:</span> ${
+              item.userAnswer || "No answer provided"
+            }</p>
             <p><span>Correct Answer:</span> ${item.answer}</p>
         `;
     summaryContainer.appendChild(summaryItem);
 
-    if (item.userAnswer.toLowerCase() === item.answer.toLowerCase()) {
+    if (
+      item.userAnswer &&
+      item.userAnswer.toLowerCase() === item.answer.toLowerCase()
+    ) {
       correctAnswers++;
     }
   });
@@ -237,7 +292,7 @@ function showSummary() {
 
   if (score < 50) {
     scoreElement.classList.add("wrong");
-    scoreElement.textContent += ` - Better luck next time!`;
+    scoreElement.textContent += " - Better luck next time!";
   } else {
     scoreElement.classList.remove("wrong");
   }

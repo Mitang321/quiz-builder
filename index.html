@@ -8,30 +8,64 @@
   </head>
   <body>
     <div class="container">
-      <h1>Create Your Quiz</h1>
-      <form id="quizForm">
-        <div id="questions-container">
-          <div class="question-block">
-            <label for="question1">Question 1:</label>
-            <input type="text" id="question1" name="question1" required />
+      <h1>Customizable Quiz Builder</h1>
 
-            <label for="type1">Question Type:</label>
-            <select id="type1" name="type1" class="question-type" required>
-              <option value="text">Text</option>
-              <option value="multiple">Multiple Choice</option>
-              <option value="truefalse">True/False</option>
-            </select>
+      <!-- Authentication Section -->
+      <div id="auth-section">
+        <h2 id="auth-title">Login</h2>
+        <form id="authForm">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit" id="authSubmitBtn">Login</button>
+          <p id="authToggle">
+            Don't have an account?
+            <a href="#" id="toggleAuthMode">Register here</a>
+          </p>
+        </form>
+        <p id="authMessage" style="color: red"></p>
+      </div>
 
-            <div class="options-container" id="options1"></div>
+      <!-- Quiz Form Section -->
+      <div id="quizForm-section" style="display: none">
+        <h2>Create Your Quiz</h2>
+        <form id="quizForm">
+          <div id="questions-container">
+            <div class="question-block">
+              <label for="question1">Question 1:</label>
+              <input type="text" id="question1" name="question1" required />
+
+              <label for="type1">Question Type:</label>
+              <select id="type1" name="type1" class="question-type" required>
+                <option value="text">Text</option>
+                <option value="multiple">Multiple Choice</option>
+                <option value="truefalse">True/False</option>
+              </select>
+
+              <div class="options-container" id="options1"></div>
+            </div>
+            <div class="answer-block">
+              <label for="answer1">Answer 1:</label>
+              <input type="text" id="answer1" name="answer1" required />
+            </div>
           </div>
-          <div class="answer-block">
-            <label for="answer1">Answer 1:</label>
-            <input type="text" id="answer1" name="answer1" required />
-          </div>
-        </div>
-        <button type="button" id="addQuestionBtn">Add Another Question</button>
-        <button type="submit">Create Quiz</button>
-      </form>
+          <button type="button" id="addQuestionBtn">
+            Add Another Question
+          </button>
+          <button type="submit">Create Quiz</button>
+        </form>
+      </div>
 
       <!-- Quiz Display Section -->
       <div id="quiz-section" style="display: none">
