@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customizable Quiz Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Create Your Quiz</h1>
+      <form id="quizForm">
+        <div id="questions-container">
+          <div class="question-block">
+            <label for="question1">Question 1:</label>
+            <input type="text" id="question1" name="question1" required />
+          </div>
+          <div class="answer-block">
+            <label for="answer1">Answer 1:</label>
+            <input type="text" id="answer1" name="answer1" required />
+          </div>
+        </div>
+        <button type="button" id="addQuestionBtn">Add Another Question</button>
+        <button type="submit">Create Quiz</button>
+      </form>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
