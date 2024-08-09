@@ -126,3 +126,10 @@ button[type="button"]:hover {
   font-size: 1.2em;
   color: #dc3545;
 }
+.options-container {
+  margin-top: 10px;
+}
+
+.options-container input {
+  margin-top: 5px;
+}

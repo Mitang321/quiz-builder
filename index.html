@@ -14,6 +14,15 @@
           <div class="question-block">
             <label for="question1">Question 1:</label>
             <input type="text" id="question1" name="question1" required />
+
+            <label for="type1">Question Type:</label>
+            <select id="type1" name="type1" class="question-type" required>
+              <option value="text">Text</option>
+              <option value="multiple">Multiple Choice</option>
+              <option value="truefalse">True/False</option>
+            </select>
+
+            <div class="options-container" id="options1"></div>
           </div>
           <div class="answer-block">
             <label for="answer1">Answer 1:</label>
@@ -28,6 +37,7 @@
       <div id="quiz-section" style="display: none">
         <h2>Take the Quiz</h2>
         <div id="quiz-question"></div>
+        <div id="quiz-options"></div>
         <input type="text" id="quiz-answer" placeholder="Your Answer" />
         <button type="button" id="nextQuestionBtn">Next Question</button>
         <div id="timer">Time Left: <span id="timeLeft">60</span> seconds</div>
