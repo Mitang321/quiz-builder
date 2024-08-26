@@ -1,4 +1,7 @@
 # Customizable Quiz Builder
+## Live Preview
+
+[Live Preview](https://mitang321.github.io/quiz-builder/)
 
 ## Overview
 A web-based quiz builder that allows users to create, take, and review quizzes. The application supports user authentication, quiz creation with various question types, and displays past quizzes and leaderboard rankings.
